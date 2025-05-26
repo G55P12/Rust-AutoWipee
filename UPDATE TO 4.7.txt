@@ -1,0 +1,3 @@
+Overwrite the folders included with the addon and use this SSH commands in your pterodactyl root directory (/var/www/pterodactyl by default)
+- yarn run build:production
+- php artisan view:clear && php artisan cache:clear && php artisan route:clear && php artisan migrate --force && chown -R www-data:www-data *

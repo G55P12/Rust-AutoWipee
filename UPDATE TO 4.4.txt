@@ -1,0 +1,56 @@
+app/Http/Middleware/Api/Client/Server/ResourceBelongsToServer.php
+Insert this under use Pterodactyl\Models\Subuser;
+
+use Pterodactyl\Models\WipeMap;
+
+
+
+app/Http/Middleware/Api/Client/Server/ResourceBelongsToServer.php
+Insert this under case Wipe::class:
+
+case WipeMap::class:
+
+
+
+app/Models/Server.php
+Under 
+
+    public function wipes(): HasMany
+    {
+        return $this->hasMany(Wipe::class, 'server_id');
+    }
+
+
+Insert:
+
+
+    /**
+     * Gets all wipe maps associated with this server.
+     */
+    public function wipemaps(): HasMany
+    {
+        return $this->hasMany(WipeMap::class, 'server_id');
+    }
+
+
+
+
+routes/api-client.php
+Insert this under Route::post('/timezone', [Client\Servers\WipeController::class, 'timezone']);
+
+Route::post('/map', [Client\Servers\WipeController::class, 'map']);
+
+
+
+routes/api-client.php
+Insert this above Route::delete('/{wipe:id}', [Client\Servers\WipeController::class, 'delete']);
+
+Route::delete('/map/{wipemap:id}', [Client\Servers\WipeController::class, 'deleteMap']);
+
+
+
+
+After done all above upload (overwrite) the folders included with the addon and use this SSH commands in your pterodactyl root directory (/var/www/pterodactyl by default)
+
+- yarn run build:production
+- php artisan view:clear && php artisan cache:clear && php artisan route:clear && php artisan migrate --force && chown -R www-data:www-data *
